@@ -1,7 +1,10 @@
+# import necessary packages
+
 import pandas as pd
 import plotly.express as px
 import dash
 from dash import Dash, dcc, html, Input, Output, dash_table
+
 
 import matplotlib.pyplot as plt
 print('importing packages')
@@ -13,7 +16,7 @@ from sklearn.pipeline import make_pipeline
 
 #--------------------------------------------------------
 
-d_path = "C:\\Users\Acer\Desktop/"
+d_path = "./data_folder/"
 
 # Read in data
 data = pd.read_csv(d_path+"data.csv")
@@ -22,22 +25,15 @@ data = pd.read_csv(d_path+"data.csv")
 columns = data.columns.to_list()
 
 
-count = 0
 
-if count<1:
-    msg_loading, msg_10, msg_40, msg_60, msg_90, msg_std = "Starting application...", 'loading; 10% complete...', 'loading; 40% complete...', 'loading; 60% complete...', 'loading; 90% complete...', '... application started.'
-else:
-    msg_loading, msg_10, msg_40, msg_60, msg_90, msg_std = "", '', '', '', '', '... application restarted.' 
+# initialise message variables
+msg_loading, msg_10, msg_40, msg_60, msg_90, msg_std = "Starting application...", 'loading; 10% complete...', 'loading; 40% complete...', 'loading; 60% complete...', 'loading; 90% complete...', '... application started.'
 
-if count<0:
-    count = count+1
-else:
-    pass
 
 def msg_printer(arg):
-    if len(arg) >3:
-        print(arg)
-        
+    print(arg)
+
+
 msg_printer(msg_loading)
 
 #                                       POPULATION ANALYSIS
@@ -181,18 +177,18 @@ print("""
 # Make pipeline and instantiate KMeans and StandardScaler within the pipe
 pipe = make_pipeline(MinMaxScaler(), KMeans(n_clusters = 4))
 
-# select data types for model training
+# select data types for model training and call it 'ml_df'
 ml_df = data.select_dtypes('number')
 
-# drop 'Consumption_expenditure(year)' column. It is not needed
+# drop 'Consumption_expenditure' columns. They are not needed
 ml_df.drop(['Consumption_expenditure(year)', 'Consumption_expenditure(%, value)'], axis = 1, inplace =True)
 
 
-# fit model, # drop 'Country' column
+# fit model
 pipe.fit(ml_df)
 
 # get labels from trained model
-label = pipe['kmeans'].labels_
+label = list(pipe['kmeans'].labels_)
 
 # include labels in ml_data
 ml_df = data.copy()
@@ -202,7 +198,7 @@ ml_df['Label'] = label
 #-------------------------------------------------------------------------
 
 
-
+# to be used later on in drop down menu
 ml_options_value = ['Population(Millions, 2022)', 'GDP(USD Billions, 2022)', 'GDP_per_capita(USD, 2022)', 'Ease_of_DB_2020']
 
 

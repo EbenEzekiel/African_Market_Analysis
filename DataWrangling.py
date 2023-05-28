@@ -9,12 +9,12 @@ from bs4 import BeautifulSoup as bs
 import plotly.express as px
 
 # working directory
-d_path = "C:\\Users\Acer\Desktop/"
+d_path = "./data_folder/"
 
 
 ## import csv documents
 # imf data on population, gross domestic product and gross domestic product per capita
-imf_data = pd.read_csv(d_path+"imf_data.csv")
+imf_data = pd.read_csv(d_path+"imf_df.csv")
 
 
 # World bank data on ease of doing buisness
